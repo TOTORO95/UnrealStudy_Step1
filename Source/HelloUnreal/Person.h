@@ -16,10 +16,8 @@ class HELLOUNREAL_API UPerson : public UObject
 	GENERATED_BODY()
 public:
 	UPerson();
-	UFUNCTION()
-	virtual void DoLesson();
-	const FString& GetName() const;
-	void SetName(const FString& InName);
+	FORCEINLINE const FString& GetName() const;
+	FORCEINLINE void SetName(const FString& InName);
 
 protected:
 	UPROPERTY()
