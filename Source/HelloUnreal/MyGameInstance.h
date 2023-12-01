@@ -19,6 +19,9 @@ public:
 	virtual void Init() override;
 
 private:
+	UPROPERTY()
+	TObjectPtr<class UCourseInfo> CourseInfo;
+
 	UPROPERTY()	   // 를 선언함으로써 리플렉션을 통해 런타임이든 컴파일이든 얻기위해 사용
 	FString SchoolName;
 };

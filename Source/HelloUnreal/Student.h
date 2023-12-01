@@ -18,4 +18,6 @@ class HELLOUNREAL_API UStudent : public UPerson, public ILessonInterface
 public:
 	UStudent();
 	virtual void DoLesson() override;
+	void GetNotification(const FString& School, const FString& NewCourseInfo);
+
 };

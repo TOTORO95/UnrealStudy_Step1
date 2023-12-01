@@ -15,3 +15,9 @@ void UStudent::DoLesson()
 	ILessonInterface::DoLesson();
 	UE_LOG(LogTemp, Log, TEXT("Studying...  %s"), *GetName());
 }
+
+void UStudent::GetNotification(const FString& School, const FString& NewCourseInfo)
+{
+	UE_LOG(
+		LogTemp, Log, TEXT("[Student] A Message that %s received from %s == MessageInfo %s"), *GetName(), *School, *NewCourseInfo);
+}

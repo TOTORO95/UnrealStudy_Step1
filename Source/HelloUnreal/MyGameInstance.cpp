@@ -7,29 +7,26 @@
 #include "Staff.h"
 #include "Student.h"
 #include "Teacher.h"
+#include "CourseInfo.h"
+
 UMyGameInstance::UMyGameInstance()
 {
-	SchoolName = TEXT("Default School");
+	SchoolName = TEXT("Uneral School");
 }
 
 void UMyGameInstance::Init()
 {
 	Super::Init();
-	TArray<UPerson*> Persons = {NewObject<UStudent>(), NewObject<UTeacher>(), NewObject<UStaff>()};
-	for (const auto Person : Persons)
+	CourseInfo = NewObject<UCourseInfo>(this);//Outer를 해당 인스턴스로 셋팅함으로써 has-a관계 성립
+
+	TArray<UStudent*> Persons = {NewObject<UStudent>(), NewObject<UStudent>(), NewObject<UStudent>()};
+	
+	for (int32 i = 0; i < Persons.Num(); i++)
 	{
-		const UCard* OwnCard = Person->GetCard();
-		check(OwnCard);
-		ECardType CardType = OwnCard->GetCardType();
-
-		UE_LOG(LogTemp, Log, TEXT("Person Type = %s  Card Type  = %d"), *Person->GetName(), CardType);
-
-		const UEnum* CardEnumType = FindObject<UEnum>(nullptr, TEXT("/Script/HelloUnreal.ECardType"));
-		if (CardEnumType)
-		{
-			FString CardMetaData = CardEnumType->GetDisplayNameTextByValue((int64) CardType).ToString();
-			UE_LOG(LogTemp, Log, TEXT("Person Type = %s  Card Type  = %s"), *Person->GetName(), *CardMetaData);
-		}
-
+		FString NewName = TEXT("Student");
+		NewName.AppendInt(i);
+		Persons[i]->SetName(NewName);
+		CourseInfo->OnChanged.AddUObject(Persons[i], &UStudent::GetNotification);
 	}
+	CourseInfo->ChangedCourseInfo(SchoolName, TEXT("Changed CourseInfo!!!"));
 }
