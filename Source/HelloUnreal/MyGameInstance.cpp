@@ -1,60 +1,51 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "MyGameInstance.h"
+#include "MyGameInstance.h"	   //해당 cpp의 header 파일은 언제나 최상위에
+
+#include "Student.h"
+#include "Teacher.h"
+
+UMyGameInstance::UMyGameInstance()
+{
+	SchoolName = TEXT("Default School");
+}
 
 void UMyGameInstance::Init()
 {
 	Super::Init();
-	UE_LOG(LogTemp, Log, TEXT("Hello World literal"));
 
-	TCHAR ChArr[] = TEXT("Hello World chArr");
-	UE_LOG(LogTemp, Log, ChArr);
+	UE_LOG(LogTemp, Log, TEXT("===================="));
+	UClass* ClassRunTime(GetClass());
+	UClass* ClassComptileTime(UMyGameInstance::StaticClass());
+	// check(ClassRunTime != ClassComptileTime);
+	ensure(ClassRunTime != ClassComptileTime);
+	ensureMsgf(ClassRunTime != ClassComptileTime, TEXT("일단 넣어봄"));
 
-	FString TextStr = ChArr;
-	UE_LOG(LogTemp, Log, TEXT("%s"), *TextStr);
+	UE_LOG(LogTemp, Log, TEXT("Class Name = %s"), *ClassRunTime->GetName());
+	UE_LOG(LogTemp, Log, TEXT("Default School Name = %s"), *ClassRunTime->GetDefaultObject<UMyGameInstance>()->SchoolName);
 
-	FString logStr = TEXT("Log fString");
-	const TCHAR* longCharArray = *logStr;
+	UE_LOG(LogTemp, Log, TEXT("===================="));
 
-	FString unrealText = TEXT("Unreal Engine");
-	TCHAR logCharArr[] = TEXT("TCHAR Array Text");
-	FString LogCharString = unrealText;
+	UStudent* Student = NewObject<UStudent>();
+	UTeacher* Teacher = NewObject<UTeacher>();
+	Student->SetName(TEXT("Student Kim"));
+	UE_LOG(LogTemp, Log, TEXT("Change Student Name = %s"), *Student->GetName());
 
-	TCHAR* LogCharDataPtr = LogCharString.GetCharArray().GetData();
-	TCHAR logCharArrayWithSize[100];
-	FCString::Strcpy(logCharArrayWithSize, LogCharString.Len(), LogCharDataPtr);
-
-	if (LogCharString.Contains(TEXT("unreal"), ESearchCase::IgnoreCase))
+	FProperty* NameProp = UTeacher::StaticClass()->FindPropertyByName(TEXT("Name"));
+	if (NameProp)
 	{
-		int32 Index = LogCharString.Find(TEXT("unreal"), ESearchCase::IgnoreCase);
-		FString EndString = LogCharString.Mid(Index);
-		UE_LOG(LogTemp, Log, TEXT("Find Text : %s "), *EndString);
-	}
+		FString CurTeacherName;
+		NameProp->GetValue_InContainer(Teacher, &CurTeacherName);
+		UE_LOG(LogTemp, Log, TEXT("Current Teacher Name = %s"), *CurTeacherName);
 
-	FString LeftStr, RightStr;
-	if (LogCharString.Split(TEXT(" "), &LeftStr, &RightStr))
+		FString newTeacherName = TEXT("Teacher JY");
+		NameProp->SetValue_InContainer(Teacher, &newTeacherName);
+		UE_LOG(LogTemp, Log, TEXT("New Teacher Name = %s"), *Teacher->GetName());
+	}
+	Student->DoLesson();
+	UFunction* DoLessonFunc = Teacher->GetClass()->FindFunctionByName(TEXT("DoLesson"));
+	if (DoLessonFunc)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Sucess Split Text Left = %s 와 Right = %s"), *LeftStr, *RightStr);
-		UE_LOG(LogTemp, Log, TEXT("LiveCoindg Sucess Split Text Left = %s 와 Right = %s"), *LeftStr, *RightStr);
+		Teacher->ProcessEvent(DoLessonFunc, nullptr);
 	}
-
-	int32 IntValue = 32;
-	float FloatValue = 3.141592;
-
-	FString FloatString = FString::SanitizeFloat(FloatValue);
-	FString IntString = FString::FromInt(IntValue);
-
-	UE_LOG(LogTemp, Log, TEXT("%s"), *(FString::Printf(TEXT("Int = %d Float = %f"), IntValue, FloatValue)));
-	UE_LOG(LogTemp, Log, TEXT("Int = %s Float = %s"), *IntString, *FloatString);
-
-	int32 IntValueFromString = FCString::Atoi(*IntString);
-	float FloatValueFromString = FCString::Atof(*FloatString);
-	FString FloatIntString2 = FString::Printf(TEXT("Int = %d Float = %f "), IntValueFromString, FloatValueFromString);
-	UE_LOG(LogTemp, Log, TEXT("%s"), *FloatIntString2);
-
-	FName key1(TEXT("ITEM"));
-	FName key2(TEXT("item"));
-	UE_LOG(LogTemp, Log, TEXT("Fname Compare Result = %s"), key1 == key2 ? TEXT("True") : TEXT("False"));
-	UE_LOG(LogTemp, Log, TEXT("Live Coding Test 5:27"));
-	UE_LOG(LogTemp, Log, TEXT("Live Coding Test 5:32"));
 }
