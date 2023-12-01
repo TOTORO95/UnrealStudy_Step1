@@ -16,8 +16,23 @@ class HELLOUNREAL_API UPerson : public UObject
 	GENERATED_BODY()
 public:
 	UPerson();
-	FORCEINLINE const FString& GetName() const;
-	FORCEINLINE void SetName(const FString& InName);
+	FORCEINLINE const FString& GetName() const
+	{
+		return Name;
+	}
+	FORCEINLINE void SetName(const FString& InName)
+	{
+		Name = InName;
+	}
+
+	FORCEINLINE class UCard* GetCard() const
+	{
+		return Card;
+	}
+	FORCEINLINE void SetCard(class UCard* InCard)
+	{
+		Card = InCard;
+	}
 
 protected:
 	UPROPERTY()
@@ -25,6 +40,9 @@ protected:
 
 	UPROPERTY()
 	int32 Year;
+
+	UPROPERTY()
+	TObjectPtr<class UCard> Card;
 
 private:
 };

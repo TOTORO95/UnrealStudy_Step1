@@ -2,8 +2,10 @@
 
 #include "Staff.h"
 
+#include "Card.h"
+
 UStaff::UStaff()
 {
 	Name = TEXT("Default Staff Name");
-	Year = 2;
+	Card->SetCardType(ECardType::Staff);
 }
