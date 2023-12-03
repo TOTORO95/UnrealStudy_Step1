@@ -3,21 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Person.h"
+// #include "Person.h"
 #include "UObject/NoExportTypes.h"
-#include "LessonInterface.h"
+// #include "LessonInterface.h"
 #include "Student.generated.h"
 
 /**
  *
  */
 UCLASS()
-class HELLOUNREAL_API UStudent : public UPerson, public ILessonInterface
+class HELLOUNREAL_API UStudent : public UObject
 {
 	GENERATED_BODY()
 public:
-	UStudent();
-	virtual void DoLesson() override;
-	void GetNotification(const FString& School, const FString& NewCourseInfo);
 
+	// virtual void DoLesson() override;
+	// void GetNotification(const FString& School, const FString& NewCourseInfo);
 };

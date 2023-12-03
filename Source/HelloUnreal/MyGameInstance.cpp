@@ -3,12 +3,20 @@
 #include "MyGameInstance.h"	   //해당 cpp의 header 파일은 언제나 최상위에
 
 #include "Algo/Accumulate.h"
-#include "Card.h"
-#include "CourseInfo.h"
-#include "Person.h"
-#include "Staff.h"
-#include "Student.h"
-#include "Teacher.h"
+
+FString MakeRandomName()
+{
+	TCHAR FirstChar[] = TEXT("김이박최");
+	TCHAR MiddleChar[] = TEXT("상혜지성");
+	TCHAR LastChar[] = TEXT("수은원영");
+
+	TArray<TCHAR> RandArray;
+	RandArray.SetNum(3);
+	RandArray[0] = FirstChar[FMath::RandRange(0, 3)];
+	RandArray[1] = MiddleChar[FMath::RandRange(0, 3)];
+	RandArray[2] = LastChar[FMath::RandRange(0, 3)];
+	return RandArray.GetData();
+}
 
 UMyGameInstance::UMyGameInstance()
 {
@@ -59,4 +67,44 @@ void UMyGameInstance::Init()
 	Int32Set.Add(8);
 	Int32Set.Add(9);
 	Int32Set.Add(10);
+
+	const int32 StudentNum = 300;
+	for (int32 Idx = 0; Idx < StudentNum; ++Idx)
+	{
+		StudentDatas.Emplace(FStudentData(MakeRandomName(), Idx));
+	}
+
+	TArray<FString> AllStudentName;
+	Algo::Transform(StudentDatas, AllStudentName, [](const FStudentData& Val) { return Val.Name; });
+	UE_LOG(LogTemp, Log, TEXT("All Student Number : %d"), AllStudentName.Num());
+
+	Algo::Transform(StudentDatas, StudentMap, [](const FStudentData& Val) { return TPair<int32, FString>(Val.Order, Val.Name); });
+	UE_LOG(LogTemp, Log, TEXT("All Student Map Size: %d"), AllStudentName.Num());
+
+	TMap<FString, int32> StudentsMapUniqueName;
+	Algo::Transform( StudentDatas, StudentsMapUniqueName, [](const FStudentData& Val) 
+		{ 
+			return TPair<FString, int32>(Val.Name, Val.Order); 
+		}
+	);
+	UE_LOG(LogTemp, Log, TEXT("Unique Student Name Map Size: %d"), StudentsMapUniqueName.Num());
+
+	TMultiMap<FString, int32> StudentMapByName;
+	Algo::Transform(StudentDatas, StudentMapByName, [](const FStudentData& Val) 
+	{ 
+		return TPair<FString, int32>(Val.Name, Val.Order);
+	});
+
+	UE_LOG(LogTemp, Log, TEXT("Multi Student Name Map Size: %d"), StudentMapByName.Num());
+
+	const FString TagetName(TEXT("이혜은"));
+	TArray<int32> AllOrders;
+	StudentMapByName.MultiFind(TagetName,AllOrders);
+	UE_LOG(LogTemp, Log, TEXT("이혜은 이름의 수 : %d"),  AllOrders.Num());
+
+	TSet<FStudentData> StudentSet;
+	for (int32 Idx = 1; Idx < StudentNum; ++Idx)
+	{
+		StudentSet.Emplace(FStudentData(MakeRandomName(),Idx));
+	}
 }
