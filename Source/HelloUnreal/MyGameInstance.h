@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Engine/StreamableManager.h"
 
 #include "MyGameInstance.generated.h"
 
@@ -34,9 +35,17 @@ class HELLOUNREAL_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
+	UMyGameInstance();
 	virtual void Init() override;
-	void PrintStudentInfo(const class UStudent* InStudent, const FString& InTag);
+	void SaveStudentPackage() const;
+	void LoadStudentPackage() const;
+	void LoadStudentObject() const;
 
 private:
 	TObjectPtr<class UStudent> StudentSrc;
+	static const FString PackageName;
+	static const FString AssetName;
+
+	FStreamableManager StreamableManager;
+	TSharedPtr<FStreamableHandle> Handle;
 };
