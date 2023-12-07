@@ -3,9 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-// #include "Person.h"
 #include "UObject/NoExportTypes.h"
-// #include "LessonInterface.h"
 #include "Student.generated.h"
 
 /**
@@ -16,7 +14,31 @@ class HELLOUNREAL_API UStudent : public UObject
 {
 	GENERATED_BODY()
 public:
+	UStudent();
+	const int32& GetOrder() const
+	{
+		return Order;
+	}
+	const FString& GetName() const
+	{
+		return Name;
+	}
 
-	// virtual void DoLesson() override;
-	// void GetNotification(const FString& School, const FString& NewCourseInfo);
+	void SetOrder(const int32& InOrder)
+	{
+		Order = InOrder;
+	} 
+	void SetName(const FString& InName)
+	{
+		Name = InName;
+	}
+	virtual void Serialize(FArchive& Ar)override;
+	private:
+	UPROPERTY()
+	int32 Order;
+
+	UPROPERTY()
+	FString Name;
 };
+
+

@@ -11,25 +11,32 @@
  *
  */
 
+struct FStudentData
+{
+	FStudentData()
+	{
+	}
+	FStudentData(int32 InOrder, const FString& InName) : Order(InOrder), Name(InName)
+	{
+	}
+	friend FArchive& operator<<(FArchive& Ar, FStudentData& InStudentData)
+	{
+		Ar << InStudentData.Order;
+		Ar << InStudentData.Name;
+		return Ar;
+	}
+	int32 Order = -1;
+	FString Name = TEXT("Default Name");
+};
+
 UCLASS()
 class HELLOUNREAL_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
 	virtual void Init() override;
-	virtual void Shutdown() override;
+	void PrintStudentInfo(const class UStudent* InStudent, const FString& InTag);
 
 private:
-	TObjectPtr<class UStudent> NonPropStudent;
-
-
-	UPROPERTY()
-	TObjectPtr<class UStudent> PropStudent;
-
-	TArray<TObjectPtr<class UStudent>> NonPropStudents;
-
-	UPROPERTY()
-	TArray<TObjectPtr<class UStudent>> PropStudents;
-
-	class FStudentManager* StudentManager = nullptr; // 일반객체라 UPROPERTY 사용불가능
+	TObjectPtr<class UStudent> StudentSrc;
 };
